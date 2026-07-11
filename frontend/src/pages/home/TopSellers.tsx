@@ -2,7 +2,6 @@ import { useState } from "react";
 import BookCard from "../books/BookCard";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-
 import { Pagination, Navigation } from "swiper/modules";
 
 import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
@@ -13,38 +12,55 @@ const categories = [
   "Fiction",
   "Horror",
   "Adventure",
+  "Thriller",
 ];
 
-const TopSellers = () => {
-  const [selectedCategory, setSelectedCategory] = useState("Choose a genre");
+interface TopSellersProps {
+  search: string;
+}
 
-  const { data: books = [] } = useFetchAllBooksQuery({});
-  interface Book {
-    _id: string;
-    coverImage: string;
-    title: string;
-    description: string;
-    newPrice: number;
-    oldPrice: number;
-  }
+interface Book {
+  _id: string;
+  coverImage: string;
+  title: string;
+  description: string;
+  newPrice: number;
+  oldPrice: number;
+  category: string;
+}
+
+const TopSellers = ({ search }: TopSellersProps) => {
+  const [selectedCategory, setSelectedCategory] =
+    useState("Choose a genre");
+
+  const { data: books = [] } = useFetchAllBooksQuery(search);
 
   const filteredBooks =
     selectedCategory === "Choose a genre"
       ? books
       : books.filter(
-          (book: { category: string }) =>
-            book.category === selectedCategory.toLowerCase()
+          (book: Book) =>
+            book.category.toLowerCase() ===
+            selectedCategory.toLowerCase()
         );
 
   return (
     <div className="py-10">
-      <h2 className="text-3xl font-semibold mb-6">Top Sellers</h2>
+      <div className="mb-8">
+  <h2 className="text-4xl font-bold text-slate-900">
+    Best Selling Books
+  </h2>
+
+  <p className="text-gray-500 mt-2">
+    Discover the most loved books by our readers.
+  </p>
+</div>
+
       <div className="mb-8 flex items-center">
         <select
           onChange={(e) => setSelectedCategory(e.target.value)}
-          name="category"
-          id="category"
-          className="border bg-[#EAEAEA] border-gray-300 rounded-md px-4 py-2 focus:outline-none"
+          value={selectedCategory}
+          className="border border-gray-200 rounded-xl px-5 py-3 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
         >
           {categories.map((category, index) => (
             <option key={index} value={category}>
@@ -54,38 +70,44 @@ const TopSellers = () => {
         </select>
       </div>
 
-      <Swiper
-        slidesPerView={1}
-        spaceBetween={30}
-        navigation={true}
-        breakpoints={{
-          640: {
-            slidesPerView: 1,
-            spaceBetween: 20,
-          },
-          768: {
-            slidesPerView: 2,
-            spaceBetween: 40,
-          },
-          1024: {
-            slidesPerView: 2,
-            spaceBetween: 50,
-          },
-          1180: {
-            slidesPerView: 3,
-            spaceBetween: 50,
-          },
-        }}
-        modules={[Pagination, Navigation]}
-        className="mySwiper"
-      >
-        {filteredBooks.length > 0 &&
-          filteredBooks.map((book: Book, index: number) => (
-            <SwiperSlide key={index}>
+      {filteredBooks.length === 0 ? (
+        <div className="text-center py-10">
+          <h3 className="text-2xl font-semibold text-gray-500">
+            No books found
+          </h3>
+        </div>
+      ) : (
+       <Swiper
+  spaceBetween={40}
+  navigation={true}
+  breakpoints={{
+    640: {
+      slidesPerView: 1,
+      spaceBetween: 20,
+    },
+    768: {
+      slidesPerView: 2,
+      spaceBetween: 25,
+    },
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 30,
+    },
+    1400: {
+      slidesPerView: 4,
+      spaceBetween: 30,
+    },
+  }}
+  modules={[Pagination, Navigation]}
+  className="mySwiper"
+>
+          {filteredBooks.map((book: Book) => (
+            <SwiperSlide key={book._id}>
               <BookCard book={book} />
             </SwiperSlide>
           ))}
-      </Swiper>
+        </Swiper>
+      )}
     </div>
   );
 };

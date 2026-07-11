@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import {
   HiMiniBars3CenterLeft,
   HiOutlineHeart,
@@ -20,6 +20,9 @@ const navigation = [
 ];
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   interface CartItem {
     id: string;
@@ -41,23 +44,49 @@ const Navbar = () => {
   const token = localStorage.getItem("token");
 
   return (
-    <header className="max-w-screen-2xl mx-auto px-4 py-6">
-      <nav className="flex justify-between items-center">
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100 shadow-sm">
+      <nav className="max-w-[1600px] mx-auto flex items-center justify-between 8 py-5">
         {}
         <div className="flex items-center md:gap-16 gap-4">
-          <Link to="/">
-            <HiMiniBars3CenterLeft className="size-6" />
-          </Link>
+          <Link
+  to="/"
+  className="flex items-center gap-3"
+>
+  <div className="w-12 h-12 rounded-2xl bg-violet-600 flex items-center justify-center text-2xl text-white shadow-lg">
+    📖
+  </div>
+
+  <div>
+    <h1 className="text-3xl font-black tracking-tight text-slate-900">
+      READORA
+    </h1>
+
+    <p className="text-sm text-slate-500 -mt-1">
+      Discover Your Next Story
+    </p>
+  </div>
+</Link>
 
           {}
-          <div className="relative sm:w-72 w-40 space-x-2">
-            <IoSearchOutline className="absolute inline-block left-3 inset-y-2" />
+          <div className="relative hidden md:block w-[420px]">
+            <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
 
             <input
-              type="text"
-              placeholder="Search here"
-              className="bg-[#EAEAEA] w-full py-1 md:px-8 px-6 rounded-md focus:outline-none"
-            />
+  type="text"
+  placeholder="Search here"
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  onKeyDown={(e) => {
+  console.log("Key:", e.key);
+
+  if (e.key === "Enter") {
+    e.preventDefault();
+    console.log("Enter pressed");
+    navigate(`/?search=${search}`);
+  }
+}}
+  className="w-full rounded-full border border-gray-200 bg-slate-50 py-3.5 pl-12 pr-5 text-sm shadow-sm transition-all duration-300 focus:border-violet-500 focus:bg-white focus:ring-4 focus:ring-violet-100 outline-none"
+/>
           </div>
         </div>
 
@@ -70,7 +99,7 @@ const Navbar = () => {
                   <img
                     src={avatarImg}
                     alt=""
-                    className={`size-7 rounded-full ${
+                    className={`w-10 h-10 rounded-full border-2 border-violet-500 ${
                       currentUser ? "ring-2 ring-blue-500" : ""
                     }`}
                   />
@@ -116,13 +145,13 @@ const Navbar = () => {
             )}
           </div>
 
-          <button className="hidden sm:block">
+          <button className="hidden sm:flex items-center justify-center w-11 h-11 rounded-full hover:bg-gray-100 transition">
             <HiOutlineHeart className="size-6" />
           </button>
 
           <Link
             to="/cart"
-            className="bg-primary p-1 sm:px-6 px-2 flex items-center rounded-sm"
+            className="flex items-center gap-2 rounded-full bg-violet-600 px-6 py-3 text-white shadow-lg hover:bg-violet-700 transition-all duration-300 hover:scale-105"
           >
             <HiOutlineShoppingCart className="" />
             {cartItems.length > 0 ? (

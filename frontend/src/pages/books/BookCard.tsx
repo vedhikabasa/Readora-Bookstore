@@ -1,8 +1,5 @@
 import { FiShoppingCart } from "react-icons/fi";
-import { getImgUrl } from "../../utils/getImgUrl";
-
 import { Link } from "react-router";
-
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cart/cartSlice";
 
@@ -13,52 +10,58 @@ interface Book {
   description: string;
   newPrice: number;
   oldPrice: number;
+  category: string;
 }
 
 const BookCard = ({ book }: { book: Book }) => {
   const dispatch = useDispatch();
 
-  const handleAddToCart = (product: Book): void => {
+  const handleAddToCart = (product: Book) => {
     dispatch(addToCart(product));
   };
+
   return (
-    <div className=" rounded-lg transition-shadow duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:h-72  sm:justify-center gap-4">
-        <div className="sm:h-72 sm:flex-shrink-0 border rounded-md">
-          <Link to={`/books/${book._id}`}>
-            <img
-              src={`${getImgUrl(book?.coverImage)}`}
-              alt=""
-              className="w-full bg-cover p-2 rounded-md cursor-pointer hover:scale-105 transition-all duration-200"
-            />
-          </Link>
+    <div className="group bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 max-w-[300px] mx-auto">
+      
+      <Link to={`/books/${book._id}`}>
+        <div className="bg-gray-50 h-[340px] flex items-center justify-center overflow-hidden">
+          <img
+            src={book.coverImage}
+            alt={book.title}
+            className="h-[290px] object-contain transition-transform duration-500 group-hover:scale-110"
+          />
+        </div>
+      </Link>
+
+      <div className="p-5">
+
+        <p className="text-xs uppercase tracking-widest text-violet-600 font-semibold mb-2">
+          {book.category}
+        </p>
+
+        <Link to={`/books/${book._id}`}>
+          <h3 className="text-xl font-bold text-slate-900 line-clamp-2 hover:text-violet-600 transition">
+            {book.title}
+          </h3>
+        </Link>
+
+        <div className="flex items-center gap-3 mt-5">
+          <span className="text-2xl font-bold text-violet-600">
+            ${book.newPrice}
+          </span>
+
+          <span className="text-gray-400 line-through">
+            ${book.oldPrice}
+          </span>
         </div>
 
-        <div>
-          <Link to={`/books/${book._id}`}>
-            <h3 className="text-xl font-semibold hover:text-blue-600 mb-3">
-              {book?.title}
-            </h3>
-          </Link>
-          <p className="text-gray-600 mb-5">
-            {book?.description.length > 80
-              ? `${book.description.slice(0, 80)}...`
-              : book?.description}
-          </p>
-          <p className="font-medium mb-5">
-            ${book?.newPrice}{" "}
-            <span className="line-through font-normal ml-2">
-              $ {book?.oldPrice}
-            </span>
-          </p>
-          <button
-            onClick={() => handleAddToCart(book)}
-            className="btn-primary px-6 space-x-1 flex items-center gap-1 "
-          >
-            <FiShoppingCart className="" />
-            <span>Add to Cart</span>
-          </button>
-        </div>
+        <button
+          onClick={() => handleAddToCart(book)}
+          className="mt-6 w-full bg-violet-600 hover:bg-violet-700 text-white rounded-xl py-3 flex items-center justify-center gap-2 transition-all duration-300"
+        >
+          <FiShoppingCart />
+          Add to Cart
+        </button>
       </div>
     </div>
   );

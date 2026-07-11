@@ -11,16 +11,27 @@ const postABook = async (req, res) => {
     }
 }
 
-const getAllBooks =  async (req, res) => {
+const getAllBooks = async (req, res) => {
     try {
-        const books = await Book.find().sort({ createdAt: -1});
-        res.status(200).send(books)
-        
+        const search = req.query.search || "";
+
+        let query = {};
+
+        if (search) {
+            query = {
+                title: { $regex: search, $options: "i" }
+            };
+        }
+
+        const books = await Book.find(query).sort({ createdAt: -1 });
+
+        res.status(200).send(books);
+
     } catch (error) {
         console.error("Error fetching books", error);
-        res.status(500).send({message: "Failed to fetch books"})
+        res.status(500).send({ message: "Failed to fetch books" });
     }
-}
+};
 
 const getSingleBook = async (req, res) => {
     try {

@@ -9,6 +9,8 @@ import {
   Legend,
 } from "chart.js";
 
+import { useFetchAdminStatsQuery } from "../../redux/features/stats/statsApi";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -18,32 +20,38 @@ ChartJS.register(
   Legend
 );
 
-const RevenueChart = () => {
-  const revenueData = [
-    500, 700, 800, 600, 750, 900, 650, 870, 960, 1020, 1100, 1150,
-  ];
+interface MonthlySale {
+  _id: string;
+  totalSales: number;
+  totalOrders: number;
+}
 
-  const data = {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
+const RevenueChart = () => {
+  const { data, isLoading } = useFetchAdminStatsQuery({});
+
+  if (isLoading) {
+    return <div className="p-5">Loading Chart...</div>;
+  }
+
+  const monthlySales: MonthlySale[] = data?.monthlySales || [];
+
+  const labels = monthlySales.map((item) => {
+    const date = new Date(item._id + "-01");
+    return date.toLocaleString("default", {
+      month: "short",
+    });
+  });
+
+  const revenue = monthlySales.map((item) => item.totalSales);
+
+  const chartData = {
+    labels,
     datasets: [
       {
         label: "Revenue (USD)",
-        data: revenueData,
-        backgroundColor: "rgba(34, 197, 94, 0.7)",
-        borderColor: "rgba(34, 197, 94, 1)",
+        data: revenue,
+        backgroundColor: "rgba(34,197,94,0.7)",
+        borderColor: "rgba(34,197,94,1)",
         borderWidth: 1,
       },
     ],
@@ -68,13 +76,8 @@ const RevenueChart = () => {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-center text-2xl font-bold text-gray-800 mb-4">
-        Monthly Revenue
-      </h2>
-      <div className="hidden md:block">
-        <Bar data={data} options={options} className="" />
-      </div>
+    <div className="w-full p-4 bg-white shadow rounded-lg">
+      <Bar data={chartData} options={options} />
     </div>
   );
 };

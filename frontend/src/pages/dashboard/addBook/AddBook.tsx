@@ -82,6 +82,7 @@ const AddBook = () => {
             { value: "fiction", label: "Fiction" },
             { value: "horror", label: "Horror" },
             { value: "adventure", label: "Adventure" },
+            { value: "thriller", label: "Thriller" },
           ]}
           register={register}
         />

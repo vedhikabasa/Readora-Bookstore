@@ -1,73 +1,204 @@
-# MERN Bookstore
+# 📚 Readora
 
 ![Project Preview](./images/project-preview.png?raw=true)
 
-|           Cart Page            |           Admin Dashboard           |
-| :----------------------------: | :---------------------------------: |
-| ![](./images/cart-preview.png) | ![](./images/dashboard-preview.png) |
+| Home Page | Admin Dashboard |
+| :--------: | :-------------: |
+| ![](./images/project-preview.png) | ![](./images/dashboard-preview.png) |
 
-<h1 align="center">MERN Bookstore</h1>
+<h1 align="center">Readora</h1>
 
 <div align="center">
 
-A full-stack bookstore application built with **React**, **Redux Toolkit**, **Express**, and **MongoDB**. Users can browse books, manage their cart, and make purchases, while admins can manage inventory and track analytics.
+A modern **Full-Stack MERN Bookstore** built using **React, Redux Toolkit, Node.js, Express.js, MongoDB, Firebase Authentication, and Tailwind CSS**.
+
+Readora allows users to discover books, search by category, manage their cart, place orders, and explore a clean, responsive shopping experience. Administrators can efficiently manage books, monitor orders, and view sales analytics through a dedicated dashboard.
 
 </div>
 
-## About The Project
+---
 
-**MERN Bookstore** is a modern web application that provides an interactive and user-friendly platform for book enthusiasts. The application consists of a **React frontend** for seamless user experience and an **Express/MongoDB backend** to handle data storage, authentication, and API endpoints.
+# ✨ Features
 
-### Features
+### 👤 User Features
 
-- **User Authentication**: Secure login and registration using **JWT** and password hashing with **bcrypt**.
-- **Book Management**: View, add, edit, and delete books from the inventory (admin feature).
-- **Cart Functionality**: Users can add/remove books from their cart and proceed to checkout.
-- **Real-time Analytics**: **Chart.js** integration for displaying sales and inventory statistics.
-- **Firebase Integration**: Image uploads for book covers.
-- **Responsive UI**: Styled with **Tailwind CSS** and interactive elements via **SweetAlert2**.
-- **RESTful API**: Efficient API endpoints with **Express.js**.
+- 🔐 Secure Authentication using **Firebase Authentication**
+- 🔍 Search books instantly
+- 📚 Browse books by category
+- ❤️ Wishlist-ready UI
+- 🛒 Add and remove books from cart
+- 💳 Checkout and place orders
+- 📦 View order history
+- 📱 Fully responsive across all devices
 
-## Built With
+### 👨‍💼 Admin Features
+
+- 📊 Interactive Dashboard
+- ➕ Add new books
+- ✏️ Update existing books
+- ❌ Delete books
+- 📚 Manage inventory
+- 📈 Sales Analytics
+- 📦 Monitor customer orders
+
+---
+
+# 🚀 Tech Stack
+
+## Frontend
+
+- React
+- TypeScript
+- Redux Toolkit
+- React Router
+- Tailwind CSS
+- Swiper.js
+- React Hook Form
+- Chart.js
+- SweetAlert2
+- Firebase Authentication
+
+## Backend
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT Authentication
+- bcrypt
+- dotenv
+- CORS
+
+---
+
+# 🎨 UI Highlights
+
+- Modern Apple-inspired UI
+- Responsive Design
+- Professional Admin Dashboard
+- Interactive Charts
+- Premium Product Cards
+- Sticky Navigation
+- Order Summary
+- Beautiful Checkout Experience
+- Clean Typography & Spacing
+
+---
+
+# 📂 Project Structure
+
+```
+Readora
+│
+├── frontend
+│   ├── components
+│   ├── pages
+│   ├── redux
+│   ├── routes
+│   ├── assets
+│   └── utils
+│
+├── backend
+│   ├── controllers
+│   ├── models
+│   ├── routes
+│   ├── middleware
+│   └── config
+│
+└── README.md
+```
+
+---
+
+# 📖 What I Learned
+
+Building **Readora** helped me strengthen my knowledge in:
+
+- Building scalable MERN applications
+- Creating REST APIs with Express.js
+- MongoDB database design using Mongoose
+- Firebase Authentication integration
+- State management using Redux Toolkit
+- Building responsive UIs using Tailwind CSS
+- Implementing protected routes & role-based access
+- Designing modern e-commerce user experiences
+- Managing orders and inventory through an admin dashboard
+
+---
+
+# 🔮 Future Enhancements
+
+- ⭐ Book Reviews & Ratings
+- ❤️ Wishlist Functionality
+- 🔔 Email Notifications
+- 💳 Online Payment Gateway (Stripe/Razorpay)
+- 📄 Pagination & Infinite Scrolling
+- 🤖 AI Book Recommendations
+- 🌙 Dark Mode
+- 📈 Advanced Analytics Dashboard
+
+---
+
+# 🛠 Installation
+
+### Clone the repository
+
+```bash
+git clone https://github.com/yourusername/readora.git
+```
 
 ### Frontend
 
-- **React 19**
-- **Redux Toolkit** (state management)
-- **React Router** (navigation)
-- **Axios** (API requests)
-- **Chart.js** (analytics visualization)
-- **Tailwind CSS** (modern styling)
-- **Firebase** (image storage)
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
 ### Backend
 
-- **Node.js & Express.js** (server and API handling)
-- **MongoDB & Mongoose** (database management)
-- **JWT & bcrypt** (authentication security)
-- **dotenv** (environment variable management)
-- **CORS** (secure API communication)
+```bash
+cd backend
+npm install
+npm run dev
+```
 
-## What I Learned
+---
 
-Developing **MERN Bookstore** helped me enhance my skills in:
+# 📸 Screenshots
 
-- Structuring a **full-stack MERN application**.
-- Implementing **secure authentication** using **JWT & bcrypt**.
-- Managing global state efficiently with **Redux Toolkit**.
-- Working with **MongoDB & Mongoose** for dynamic data storage.
-- Visualizing data using **Chart.js**.
-- Handling **file uploads** via **Firebase**.
-- Writing clean and maintainable API endpoints with **Express.js**.
+## Home
 
-## Useful Resources
+![Home](./images/project-preview.png)
 
-1. [React Documentation](https://react.dev/)
-2. [Redux Toolkit Docs](https://redux-toolkit.js.org/)
-3. [Express.js Guide](https://expressjs.com/)
-4. [MongoDB Official Docs](https://www.mongodb.com/docs/)
-5. [Chart.js Guide](https://www.chartjs.org/)
+## Cart
 
-## Acknowledgments
+![Cart](./images/cart-preview.png)
 
-This project is a step forward in mastering **Full-stack development**. Thanks to the open-source community for providing valuable libraries and resources that made this project possible.
+## Dashboard
+
+![Dashboard](./images/dashboard-preview.png)
+
+---
+
+# 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome.
+
+Feel free to fork the repository and submit a pull request.
+
+---
+
+# 📄 License
+
+MIT License
+
+Copyright (c) 2026 Vedhika Basa
+
+---
+
+<div align="center">
+
+Made with ❤️ using the MERN Stack by **Vedhika Basa**
+
+</div>

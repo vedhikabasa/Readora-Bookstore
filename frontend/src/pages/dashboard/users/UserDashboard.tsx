@@ -12,6 +12,7 @@ const UserDashboard = () => {
     phone: string;
     totalPrice: number;
     address: {
+      street: string;
       city: string;
       state: string;
       country: string;

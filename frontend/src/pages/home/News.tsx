@@ -1,98 +1,109 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-
-import { Pagination, Navigation } from "swiper/modules";
+import { Link } from "react-router";
 
 import news1 from "../../assets/news/news-1.png";
 import news2 from "../../assets/news/news-2.png";
 import news3 from "../../assets/news/news-3.png";
 import news4 from "../../assets/news/news-4.png";
-import { Link } from "react-router";
 
 const news = [
   {
     id: 1,
-    title: "Global Climate Summit Calls for Urgent Action",
+    title: "Top 10 Must-Read Books of 2026",
     description:
-      "World leaders gather at the Global Climate Summit to discuss urgent strategies to combat climate change, focusing on reducing carbon emissions and fostering renewable energy solutions.",
+      "Discover this year's most loved books across fiction, business, mystery, and self-development. Build your perfect reading list today.",
     image: news1,
+    category: "Trending",
+    date: "July 2026",
   },
   {
     id: 2,
-    title: "Breakthrough in AI Technology Announced",
+    title: "Author Spotlight: James Clear",
     description:
-      "A major breakthrough in artificial intelligence has been announced by researchers, with new advancements promising to revolutionize industries from healthcare to finance.",
+      "Explore the journey of bestselling author James Clear and discover why Atomic Habits continues to inspire millions of readers worldwide.",
     image: news2,
+    category: "Authors",
+    date: "July 2026",
   },
   {
     id: 3,
-    title: "New Space Mission Aims to Explore Distant Galaxies",
+    title: "5 Reading Habits That Improve Productivity",
     description:
-      "NASA has unveiled plans for a new space mission that will aim to explore distant galaxies, with hopes of uncovering insights into the origins of the universe.",
+      "Learn practical reading habits that help improve focus, boost creativity, and make learning a daily routine.",
     image: news3,
+    category: "Reading Tips",
+    date: "July 2026",
   },
   {
     id: 4,
-    title: "Stock Markets Reach Record Highs Amid Economic Recovery",
+    title: "Award-Winning Books You Shouldn't Miss",
     description:
-      "Global stock markets have reached record highs as signs of economic recovery continue to emerge following the challenges posed by the global pandemic.",
+      "Explore critically acclaimed books that have received international recognition for their storytelling and impact.",
     image: news4,
-  },
-  {
-    id: 5,
-    title: "Innovative New Smartphone Released by Leading Tech Company",
-    description:
-      "A leading tech company has released its latest smartphone model, featuring cutting-edge technology, improved battery life, and a sleek new design.",
-    image: news2,
+    category: "Editor's Pick",
+    date: "July 2026",
   },
 ];
 
 const News = () => {
   return (
-    <div className="py-16">
-      <h2 className="text-3xl font-semibold mb-6">News </h2>
+    <section className="py-24">
+      <div className="mb-12">
+        <h2 className="text-5xl font-bold text-slate-900">
+          Reading Journal
+        </h2>
 
-      <Swiper
-        slidesPerView={1}
-        spaceBetween={30}
-        navigation={true}
-        breakpoints={{
-          640: {
-            slidesPerView: 1,
-            spaceBetween: 20,
-          },
-          768: {
-            slidesPerView: 2,
-            spaceBetween: 40,
-          },
-          1024: {
-            slidesPerView: 2,
-            spaceBetween: 50,
-          },
-        }}
-        modules={[Pagination, Navigation]}
-        className="mySwiper"
-      >
-        {news.map((item, index) => (
-          <SwiperSlide key={index}>
-            <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-12">
-              <div className="py-4">
-                <Link to="/">
-                  <h3 className="text-lg font-medium hover:text-blue-500 mb-4">
-                    {item.title}
-                  </h3>
-                </Link>
-                <div className="w-12 h-[4px] bg-primary mb-5"></div>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
+        <p className="mt-3 text-gray-500 text-lg">
+          Discover book recommendations, reading tips, author stories and the
+          latest literary updates.
+        </p>
+      </div>
 
-              <div className="flex-shrink-0">
-                <img src={item.image} alt="" className="w-full object-cover" />
-              </div>
+      <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+        {news.map((item) => (
+          <article
+            key={item.id}
+            className="group overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+          >
+            <div className="overflow-hidden">
+              <img
+                src={item.image}
+                alt={item.title}
+                className="h-56 w-full object-cover transition duration-500 group-hover:scale-110"
+              />
             </div>
-          </SwiperSlide>
+
+            <div className="p-6">
+              <div className="mb-4 flex items-center justify-between">
+                <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700">
+                  {item.category}
+                </span>
+
+                <span className="text-xs text-gray-400">
+                  {item.date}
+                </span>
+              </div>
+
+              <Link to="/">
+                <h3 className="line-clamp-2 text-xl font-bold text-slate-900 transition hover:text-violet-600">
+                  {item.title}
+                </h3>
+              </Link>
+
+              <p className="mt-4 line-clamp-3 text-sm leading-7 text-gray-500">
+                {item.description}
+              </p>
+
+              <Link
+                to="/"
+                className="mt-6 inline-flex items-center font-semibold text-violet-600 transition hover:text-violet-700"
+              >
+                Read Article →
+              </Link>
+            </div>
+          </article>
         ))}
-      </Swiper>
-    </div>
+      </div>
+    </section>
   );
 };
 

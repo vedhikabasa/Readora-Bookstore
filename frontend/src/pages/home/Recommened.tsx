@@ -9,13 +9,16 @@ const Recommened = () => {
   const { data: books = [] } = useFetchAllBooksQuery({});
 
   interface Book {
-    _id: string;
-    coverImage: string;
-    title: string;
-    description: string;
-    newPrice: number;
-    oldPrice: number;
-  }
+  id: string;
+  title: string;
+  author: string;
+  createdAt: string;
+  category: string;
+  description: string;
+  coverImage: string;
+  newPrice: number;
+  oldPrice: number;
+}
 
   return (
     <div className="py-16">

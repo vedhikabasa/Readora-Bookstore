@@ -3,319 +3,351 @@ import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
-
 import Swal from "sweetalert2";
 import { useCreateOrderMutation } from "../../redux/features/orders/ordersApi";
+import { FiShoppingBag, FiTruck, FiShield, FiCreditCard } from "react-icons/fi";
 
-const CheckoutPage = () => {
-  interface CartItem {
-    _id: string;
-    newPrice: number;
-  }
+interface CartItem {
+  _id: string;
+  newPrice: number;
+}
 
-  const cartItems = useSelector(
-    (state: { cart: { cartItems: CartItem[] } }) => state.cart.cartItems
-  );
-  const totalPrice = cartItems
-    .reduce((acc: number, item: { newPrice: number }) => acc + item.newPrice, 0)
-    .toFixed(2);
-  const { currentUser } = useAuth();
-  const { register, handleSubmit } = useForm<FormData>();
+interface FormData {
+  name: string;
+  city: string;
+  country: string;
+  state: string;
+  zipcode: string;
+  phone: string;
+  address: string;
+}
 
-  const [createOrder, { isLoading }] = useCreateOrderMutation();
-  const navigate = useNavigate();
-
-  const [isChecked, setIsChecked] = useState(false);
-  interface OrderData {
-    name: string;
-    email: string | undefined;
-    address: {
-      city: string;
-      country: string;
-      state: string;
-      zipcode: string;
-    };
-    phone: string;
-    productIds: string[];
-    totalPrice: string;
-  }
-
-  interface FormData {
-    name: string;
+interface OrderData {
+  name: string;
+  email: string | undefined;
+  address: {
+    street: string;
     city: string;
     country: string;
     state: string;
     zipcode: string;
-    phone: string;
-    address: string;
-  }
+  };
+  phone: string;
+  productIds: string[];
+  totalPrice: number;
+}
+
+const CheckoutPage = () => {
+  const cartItems = useSelector(
+    (state: { cart: { cartItems: CartItem[] } }) => state.cart.cartItems
+  );
+
+  const totalPrice = Number(
+    cartItems
+      .reduce((acc, item) => acc + item.newPrice, 0)
+      .toFixed(2)
+  );
+
+  const { currentUser } = useAuth();
+  const { register, handleSubmit } = useForm<FormData>();
+
+  const [createOrder, { isLoading }] = useCreateOrderMutation();
+
+  const navigate = useNavigate();
+
+  const [isChecked, setIsChecked] = useState(false);
 
   const onSubmit = async (data: FormData) => {
     const newOrder: OrderData = {
       name: data.name,
       email: currentUser?.email ?? undefined,
       address: {
+        street: data.address,
         city: data.city,
         country: data.country,
         state: data.state,
         zipcode: data.zipcode,
       },
       phone: data.phone,
-      productIds: cartItems.map((item: { _id: string }) => item?._id),
-      totalPrice: totalPrice,
+      productIds: cartItems.map((item) => item._id),
+      totalPrice,
     };
 
     try {
       await createOrder(newOrder).unwrap();
+
       Swal.fire({
-        title: "Confirmed Order",
-        text: "Your order placed successfully!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, It's Okay!",
+        icon: "success",
+        title: "Order Placed Successfully!",
+        text: "Thank you for shopping with Readora.",
+        confirmButtonColor: "#7c3aed",
       });
+
       navigate("/orders");
     } catch (error) {
-      console.error("Error place an order", error);
-      alert("Failed to place an order");
+      console.error(error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Something went wrong",
+        text: "Unable to place your order.",
+      });
     }
   };
 
-  if (isLoading) return <div>Loading....</div>;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-[70vh] text-xl font-semibold">
+        Loading...
+      </div>
+    );
+  }
+
   return (
-    <section>
-      <div className="min-h-screen p-6 bg-gray-100 flex items-center justify-center">
-        <div className="container max-w-screen-lg mx-auto">
-          <div>
-            <div>
-              <h2 className="font-semibold text-xl text-gray-600 mb-2">
-                Cash On Delevary
-              </h2>
-              <p className="text-gray-500 mb-2">Total Price: ${totalPrice}</p>
-              <p className="text-gray-500 mb-6">
-                Items: {cartItems.length > 0 ? cartItems.length : 0}
-              </p>
-            </div>
+    <section className="max-w-[1500px] mx-auto px-6 py-16">
 
-            <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3 my-8"
-              >
-                <div className="text-gray-600">
-                  <p className="font-medium text-lg">Personal Details</p>
-                  <p>Please fill out all the fields.</p>
-                </div>
+      <div className="mb-12">
+        <h1 className="text-5xl font-black text-slate-900">
+          Checkout
+        </h1>
 
-                <div className="lg:col-span-2">
-                  <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
-                    <div className="md:col-span-5">
-                      <label htmlFor="full_name">Full Name</label>
-                      <input
-                        {...register("name", { required: true })}
-                        type="text"
-                        name="name"
-                        id="name"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                      />
-                    </div>
+        <p className="text-gray-500 mt-3">
+          Complete your purchase by filling in your shipping details.
+        </p>
+      </div>
 
-                    <div className="md:col-span-5">
-                      <label htmlFor="email">Email Address</label>
-                      <input
-                        type="text"
-                        name="email"
-                        id="email"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        disabled
-                        defaultValue={currentUser?.email ?? ""}
-                        placeholder="email@domain.com"
-                      />
-                    </div>
-                    <div className="md:col-span-5">
-                      <label htmlFor="phone">Phone Number</label>
-                      <input
-                        {...register("phone", { required: true })}
-                        type="number"
-                        name="phone"
-                        id="phone"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder="+123 456 7890"
-                      />
-                    </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
 
-                    <div className="md:col-span-3">
-                      <label htmlFor="address">Address / Street</label>
-                      <input
-                        {...register("address", { required: true })}
-                        type="text"
-                        name="address"
-                        id="address"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder=""
-                      />
-                    </div>
+        <div className="grid lg:grid-cols-3 gap-10">
 
-                    <div className="md:col-span-2">
-                      <label htmlFor="city">City</label>
-                      <input
-                        {...register("city", { required: true })}
-                        type="text"
-                        name="city"
-                        id="city"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder=""
-                      />
-                    </div>
+          {/* Left Side */}
 
-                    <div className="md:col-span-2">
-                      <label htmlFor="country">Country / region</label>
-                      <div className="h-10 bg-gray-50 flex border border-gray-200 rounded items-center mt-1">
-                        <input
-                          {...register("country", { required: true })}
-                          name="country"
-                          id="country"
-                          placeholder="Country"
-                          className="px-4 appearance-none outline-none text-gray-800 w-full bg-transparent"
-                        />
-                        <button
-                          tabIndex={-1}
-                          className="cursor-pointer outline-none focus:outline-none transition-all text-gray-300 hover:text-red-600"
-                        >
-                          <svg
-                            className="w-4 h-4 mx-2 fill-current"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                          </svg>
-                        </button>
-                        <button
-                          tabIndex={-1}
-                          className="cursor-pointer outline-none focus:outline-none border-l border-gray-200 transition-all text-gray-300 hover:text-blue-600"
-                        >
-                          <svg
-                            className="w-4 h-4 mx-2 fill-current"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <polyline points="18 15 12 9 6 15"></polyline>
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
+          <div className="lg:col-span-2 bg-white rounded-3xl shadow-lg border border-gray-100 p-10">
 
-                    <div className="md:col-span-2">
-                      <label htmlFor="state">State / province</label>
-                      <div className="h-10 bg-gray-50 flex border border-gray-200 rounded items-center mt-1">
-                        <input
-                          {...register("state", { required: true })}
-                          name="state"
-                          id="state"
-                          placeholder="State"
-                          className="px-4 appearance-none outline-none text-gray-800 w-full bg-transparent"
-                        />
-                        <button className="cursor-pointer outline-none focus:outline-none transition-all text-gray-300 hover:text-red-600">
-                          <svg
-                            className="w-4 h-4 mx-2 fill-current"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                          </svg>
-                        </button>
-                        <button
-                          tabIndex={-1}
-                          className="cursor-pointer outline-none focus:outline-none border-l border-gray-200 transition-all text-gray-300 hover:text-blue-600"
-                        >
-                          <svg
-                            className="w-4 h-4 mx-2 fill-current"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <polyline points="18 15 12 9 6 15"></polyline>
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
+            <h2 className="text-2xl font-bold mb-8">
+              Shipping Information
+            </h2>
 
-                    <div className="md:col-span-1">
-                      <label htmlFor="zipcode">Zipcode</label>
-                      <input
-                        {...register("zipcode", { required: true })}
-                        type="text"
-                        name="zipcode"
-                        id="zipcode"
-                        className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder=""
-                      />
-                    </div>
+            <div className="grid md:grid-cols-2 gap-6">
 
-                    <div className="md:col-span-5 mt-3">
-                      <div className="inline-flex items-center">
-                        <input
-                          onChange={(e) => setIsChecked(e.target.checked)}
-                          type="checkbox"
-                          name="billing_same"
-                          id="billing_same"
-                          className="form-checkbox"
-                        />
-                        <label htmlFor="billing_same" className="ml-2 ">
-                          I am aggree to the{" "}
-                          <Link
-                            className="underline underline-offset-2 text-blue-600"
-                            to={""}
-                          >
-                            Terms & Conditions
-                          </Link>{" "}
-                          and{" "}
-                          <Link
-                            className="underline underline-offset-2 text-blue-600"
-                            to={""}
-                          >
-                            Shoping Policy.
-                          </Link>
-                        </label>
-                      </div>
-                    </div>
+              <div className="md:col-span-2">
+                <label className="block mb-2 font-medium">
+                  Full Name
+                </label>
 
-                    <div className="md:col-span-5 text-right">
-                      <div className="inline-flex items-end">
-                        <button
-                          disabled={!isChecked}
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        >
-                          Place an Order
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
+                <input
+                  {...register("name", { required: true })}
+                  className="w-full rounded-xl border border-gray-200 px-5 py-3 outline-none focus:border-violet-500"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block mb-2 font-medium">
+                  Email
+                </label>
+
+                <input
+                  disabled
+                  defaultValue={currentUser?.email ?? ""}
+                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-5 py-3"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 font-medium">
+                  Phone
+                </label>
+
+                <input
+                  {...register("phone", { required: true })}
+                  className="w-full rounded-xl border border-gray-200 px-5 py-3 outline-none focus:border-violet-500"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 font-medium">
+                  City
+                </label>
+
+                <input
+                  {...register("city", { required: true })}
+                  className="w-full rounded-xl border border-gray-200 px-5 py-3 outline-none focus:border-violet-500"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block mb-2 font-medium">
+                  Address
+                </label>
+
+                <input
+                  {...register("address", { required: true })}
+                  className="w-full rounded-xl border border-gray-200 px-5 py-3 outline-none focus:border-violet-500"
+                />
+              </div>
+                            <div>
+                <label className="block mb-2 font-medium">
+                  Country
+                </label>
+
+                <input
+                  {...register("country", { required: true })}
+                  className="w-full rounded-xl border border-gray-200 px-5 py-3 outline-none focus:border-violet-500"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 font-medium">
+                  State
+                </label>
+
+                <input
+                  {...register("state", { required: true })}
+                  className="w-full rounded-xl border border-gray-200 px-5 py-3 outline-none focus:border-violet-500"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 font-medium">
+                  Zip Code
+                </label>
+
+                <input
+                  {...register("zipcode", { required: true })}
+                  className="w-full rounded-xl border border-gray-200 px-5 py-3 outline-none focus:border-violet-500"
+                />
+              </div>
             </div>
           </div>
+
+          {/* Right Side */}
+
+          <div>
+
+            <div className="sticky top-28 bg-white rounded-3xl border border-gray-100 shadow-lg p-8">
+
+              <h2 className="text-2xl font-bold mb-8">
+                Order Summary
+              </h2>
+
+              <div className="space-y-6">
+
+                <div className="flex justify-between">
+                  <span className="text-gray-500">
+                    Items
+                  </span>
+
+                  <span className="font-semibold">
+                    {cartItems.length}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-gray-500">
+                    Shipping
+                  </span>
+
+                  <span className="text-green-600 font-semibold">
+                    Free
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-gray-500">
+                    Payment
+                  </span>
+
+                  <span className="font-semibold">
+                    Cash On Delivery
+                  </span>
+                </div>
+
+                <hr />
+
+                <div className="flex justify-between text-3xl font-bold">
+                  <span>Total</span>
+
+                  <span className="text-violet-600">
+                    ${totalPrice}
+                  </span>
+                </div>
+
+              </div>
+
+              <div className="mt-10 space-y-5">
+
+                <div className="flex items-center gap-3 text-gray-600">
+                  <FiTruck className="text-violet-600" />
+                  <span>Free Shipping</span>
+                </div>
+
+                <div className="flex items-center gap-3 text-gray-600">
+                  <FiShield className="text-violet-600" />
+                  <span>Secure Checkout</span>
+                </div>
+
+                <div className="flex items-center gap-3 text-gray-600">
+                  <FiCreditCard className="text-violet-600" />
+                  <span>Cash On Delivery</span>
+                </div>
+
+              </div>
+
+              <div className="mt-10">
+
+                <label className="flex items-start gap-3 cursor-pointer">
+
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={(e) => setIsChecked(e.target.checked)}
+                    className="mt-1"
+                  />
+
+                  <span className="text-sm text-gray-500">
+                    I agree to the{" "}
+                    <Link
+                      to="/"
+                      className="text-violet-600 hover:underline"
+                    >
+                      Terms & Conditions
+                    </Link>{" "}
+                    and{" "}
+                    <Link
+                      to="/"
+                      className="text-violet-600 hover:underline"
+                    >
+                      Privacy Policy
+                    </Link>.
+                  </span>
+
+                </label>
+
+              </div>
+
+              <button
+                disabled={!isChecked}
+                className="mt-8 w-full rounded-2xl bg-violet-600 py-4 text-lg font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-gray-300 flex items-center justify-center gap-3"
+              >
+                <FiShoppingBag />
+                Place Order
+              </button>
+
+              <Link
+                to="/cart"
+                className="block text-center mt-5 text-violet-600 hover:underline"
+              >
+                ← Back to Cart
+              </Link>
+
+            </div>
+
+          </div>
+
         </div>
-      </div>
+
+      </form>
+
     </section>
   );
 };

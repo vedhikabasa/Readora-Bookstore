@@ -20,7 +20,7 @@ const AppRouter = () => {
       <BrowserRouter>
         <AuthProvide>
           <Navbar />
-          <main className="min-h-screen max-w-screen-2xl mx-auto px-4 py-6 font-primary">
+          <main className="min-h-screen max-w-[1700px] mx-auto px-4 py-6 font-primary">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route
