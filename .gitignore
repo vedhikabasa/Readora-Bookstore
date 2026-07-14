@@ -10,3 +10,8 @@ Thumbs.db
 
 # Environment
 .env
+
+node_modules/
+dist/
+build/
+coverage/
